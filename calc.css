@@ -1,0 +1,23 @@
+.bbasic{
+  min-width: 55px;
+  min-height: 55px;
+  align-items: center;
+}
+
+#display{
+  width: 290px;
+  height: 55px;
+  border-radius: 5px;
+  border: solid black 2px;
+  background-color: #00CC66;
+  text-align: right;
+  font-size: 40px;
+}
+
+#calc{
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 320px;
+  background-color: #202020;
+}
