@@ -5,12 +5,16 @@ jQuery(document).ready(function() {
   const MULT = 2;
   const SUM = 3;
   const REST = 4;
+  const OTHEROP = 5;
 
   var o ={
     op1:0,
-    op2:0
+    op2:0,
+    result: 0
   };
   var operation = NP;
+  var float = false;
+  var fpow = 1;
 
   //Print the result into the display
   var showResult = function(num){
@@ -19,9 +23,14 @@ jQuery(document).ready(function() {
 
 
   var valorOperador = function(op, n){
+    if(float){
+      op = op + n / Math.pow(10, fpow);
+      fpow++;
+    }else{
       op = n + (op * 10);
-      showResult(op);
-      return op;
+    }
+    showResult(op);
+    return op;
   };
 
   var cambiarOperador = function(n){
@@ -32,47 +41,86 @@ jQuery(document).ready(function() {
     }
   };
 
+  var opRest = function(){
+    if(o.op2 > o.op1){
+      o.result = 0 - (o.op2 - o.op1);
+    }else{
+      o.result = o.op1 - o.op2;
+    }
+  };
+
   //Calculate the result
   var calcResult = function(){
     switch (operation) {
       case DIV:
-        o.op1 = o.op1/o.op2;
+        o.result = o.op1/o.op2;
         break;
       case MULT:
-        o.op1 = o.op1*o.op2;
+        o.result = o.op1*o.op2;
         break;
       case SUM:
-        o.op1 = o.op1+o.op2;
+        o.result = o.op1+o.op2;
         break;
       case REST:
-        o.op1 = o.op1-o.op2;
+        opRest();
         break;
       default:
-
+        o.result = o.op1;
     }
+    o.op1 = o.result;
     o.op2 = 0;
-    showResult(o.op1);
+    float = false;
+    showResult(o.result);
+    operation = OTHEROP;
   };
 
   var clickOperation = function(op){
       if(op == "/"){
-        operation = DIV;
+        defOperation(DIV);
       }else if(op == "\*"){
-        operation = MULT;
+        defOperation(MULT);
       }else if(op == "+"){
-        operation = SUM;
+        defOperation(SUM);
       }else if(op == "-"){
-        operation = REST;
+        defOperation(REST);
       }
+  };
+
+  var ans = function(){
+    o.op1 = o.result;
+    showResult(o.op1);
+  };
+
+  var opNegative = function(){
+    if(operation == OTHEROP || operation == NP ){
+      o.op1 = 0 -o.op1;
+      showResult(o.op1);
+    }else{
+      o.op2 = 0 - o.op2;
+      showResult(o.op2);
+    }
   };
 
   var resetCalc = function(){
     o.op1 = 0;
     o.op2 = 0;
     operation = NP;
+    float = false;
+    fpow = 1;
     showResult(o.op1);
   };
 
+  var defOperation = function(opt){
+    if(operation != NP){
+      calcResult();
+    }
+    operation = opt;
+    float = false;
+    fpow = 1;
+  };
+
+
+  //Press buttoms
   $(".bnum").click(function(){
       cambiarOperador(parseInt($(this).val(), 10));
     });
@@ -81,26 +129,36 @@ jQuery(document).ready(function() {
     });
   $(".bresult").click(calcResult);
   $(".bclear").click(resetCalc);
+  $(".bans").click(ans);
+  $(".bnegative").click(opNegative);
+  $(".bpunto").click(function(){float = true});
 
+  //Press KeyBoard
   var pressKeyBoard = function(e){
     pk = e.which;
+    console.log(pk);
     if(pk >= 48 && pk <= 57){
       cambiarOperador(pk - 48);
     }else if(pk == 47){ // Press key "/"
-      operation = DIV;
+      defOperation(DIV);
     }else if(pk == 42){ // Press key "*"
-      operation = MULT;
+      defOperation(MULT);
     }else if(pk == 43){ // Press key "+"
-      operation = SUM;
+      defOperation(SUM);
     }else if(pk == 45){ // Press key "-"
-      operation = REST;
+      defOperation(REST);
+    }else if(pk == 46){ // Press key "-"
+        float = true;
+    }else if(pk == 97){ // Press key "-"
+      ans();
+    }else if(pk == 110){ // Press key "-"
+      opNegative();
     }else if(pk == 13){ // Press key "Enter"
       calcResult();
     }else if(pk == 8){ // Press key "Enter"
       resetCalc();
     }
-
   };
-  
+
   $(document).keypress(pressKeyBoard);
 });
