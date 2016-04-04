@@ -9,13 +9,13 @@ Esta práctica consistirá en la creación de una calculadora que funcione como 
 <a href="http://djuanes87.github.io/X-Nav-Practica-Calculadora"> Practica Calculadora </a>
 
 ##TECLADO
-1-9 -> Numeros.
-. -> Convierte el entero en un float.
-n -> Cambia el valor del display de positivo a negativo y viceversa.
-ANS -> Carga en el display el ultimo resultado almacenado, este se guarda en la cache, recuperandose si se vuelve a entrar.
-* ->Multiplica
-+ ->Suma
-- ->Resta
-/ ->Divide
-ENTER ->Saca el resultado
-RETROCESO ->Resetea la calculadora
+<br>1-9 -> Numeros.
+<br>. -> Convierte el entero en un float.
+<br>n -> Cambia el valor del display de positivo a negativo y viceversa.
+<br>ANS -> Carga en el display el ultimo resultado almacenado, este se guarda en la cache, recuperandose si se vuelve a entrar.
+<br>* ->Multiplica
+<br>+ ->Suma
+<br>- ->Resta
+<br>/ ->Divide
+<br>ENTER ->Saca el resultado
+<br>RETROCESO ->Resetea la calculadora
