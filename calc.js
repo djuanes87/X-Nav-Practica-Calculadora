@@ -15,22 +15,32 @@ jQuery(document).ready(function() {
   var operation = NP;
   var float = false;
   var fpow = 1;
+  var storage = false;
 
   //Print the result into the display
   var showResult = function(num){
-    $("#display").text(num);
+    $("#display").val(num);
   };
 
 
   var valorOperador = function(op, n){
     if(float){
-      op = op + n / Math.pow(10, fpow);
-      fpow++;
+      var val = $("#display").val();
+      val = val + n;
+      $("#display").val(val);
     }else{
-      op = n + (op * 10);
+      var val = $("#display").val()
+      if(op == 0){
+        val = 0;
+      }
+      if( parseFloat(val) == 0){
+        val = n;
+      }else{
+        val = val + n;
+      }
+      $("#display").val(val);
     }
-    showResult(op);
-    return op;
+    return parseFloat(val, 10);
   };
 
   var cambiarOperador = function(n){
@@ -42,11 +52,7 @@ jQuery(document).ready(function() {
   };
 
   var opRest = function(){
-    if(o.op2 > o.op1){
-      o.result = 0 - (o.op2 - o.op1);
-    }else{
-      o.result = o.op1 - o.op2;
-    }
+    o.result = o.op1 -o.op2;
   };
 
   //Calculate the result
@@ -62,7 +68,7 @@ jQuery(document).ready(function() {
         o.result = o.op1+o.op2;
         break;
       case REST:
-        opRest();
+        o.result = o.op1 -o.op2;
         break;
       default:
         o.result = o.op1;
@@ -72,6 +78,7 @@ jQuery(document).ready(function() {
     float = false;
     showResult(o.result);
     operation = OTHEROP;
+    saveLastResult();
   };
 
   var clickOperation = function(op){
@@ -93,10 +100,10 @@ jQuery(document).ready(function() {
 
   var opNegative = function(){
     if(operation == OTHEROP || operation == NP ){
-      o.op1 = 0 -o.op1;
+      o.op1 = -o.op1;
       showResult(o.op1);
     }else{
-      o.op2 = 0 - o.op2;
+      o.op2 = -o.op2;
       showResult(o.op2);
     }
   };
@@ -119,10 +126,19 @@ jQuery(document).ready(function() {
     fpow = 1;
   };
 
+  var opFloat = function(){
+    if(!float){
+      float = true;
+      var val = $("#display").val();
+      val = val + ".";
+      $("#display").val(val)
+    }
+  };
+
 
   //Press buttoms
   $(".bnum").click(function(){
-      cambiarOperador(parseInt($(this).val(), 10));
+      cambiarOperador($(this).val());
     });
   $(".bop").click(function(){
         clickOperation($(this).val());
@@ -131,7 +147,7 @@ jQuery(document).ready(function() {
   $(".bclear").click(resetCalc);
   $(".bans").click(ans);
   $(".bnegative").click(opNegative);
-  $(".bpunto").click(function(){float = true});
+  $(".bpunto").click(opFloat);
 
   //Press KeyBoard
   var pressKeyBoard = function(e){
@@ -147,18 +163,39 @@ jQuery(document).ready(function() {
       defOperation(SUM);
     }else if(pk == 45){ // Press key "-"
       defOperation(REST);
-    }else if(pk == 46){ // Press key "-"
-        float = true;
-    }else if(pk == 97){ // Press key "-"
+    }else if(pk == 46){ // Press key "."
+      opFloat();
+    }else if(pk == 97){ // Press key "a"
       ans();
-    }else if(pk == 110){ // Press key "-"
+    }else if(pk == 110){ // Press key "n"
       opNegative();
     }else if(pk == 13){ // Press key "Enter"
       calcResult();
-    }else if(pk == 8){ // Press key "Enter"
+    }else if(pk == 8){ // Press key "retroceso"
       resetCalc();
     }
   };
 
   $(document).keypress(pressKeyBoard);
+
+  var saveLastResult = function(){
+    if(storage){
+      localStorage.setItem("ans", o.result);
+    }
+  };
+
+var loadVar = function(){
+	if((o.result = localStorage.getItem("ans")) == null || !storage){
+		o.result = 0;
+	}
+};
+
+var checkFuncionalities = function(){
+  storage = Modernizr.localstorage;
+  console.log(storage);
+};
+
+checkFuncionalities();
+loadVar();
+
 });
